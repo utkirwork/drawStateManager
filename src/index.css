@@ -38,6 +38,9 @@ All colors MUST be HSL.
     --warning: 38 92% 50%;
     --warning-foreground: 0 0% 100%;
 
+    --loop: 280 65% 60%;
+    --loop-foreground: 0 0% 100%;
+
     --border: 220 13% 91%;
     --input: 220 13% 91%;
     --ring: 231 48% 48%;
@@ -85,6 +88,9 @@ All colors MUST be HSL.
     --warning: 38 92% 40%;
     --warning-foreground: 0 0% 100%;
 
+    --loop: 280 65% 55%;
+    --loop-foreground: 0 0% 100%;
+
     --border: 217 33% 17%;
     --input: 217 33% 17%;
     --ring: 231 48% 58%;
@@ -120,11 +126,38 @@ All colors MUST be HSL.
 }
 
 .react-flow__edge-path {
-  stroke-width: 2;
+  stroke-width: 2.5;
+  transition: stroke-width 0.2s ease;
 }
 
 .react-flow__edge.selected .react-flow__edge-path {
+  stroke-width: 4;
+}
+
+.react-flow__edge.backward-flow .react-flow__edge-path {
   stroke-width: 3;
+  stroke-dasharray: 8, 4;
+  animation: dash 20s linear infinite;
+}
+
+.react-flow__edge.backward-flow.selected .react-flow__edge-path {
+  stroke-width: 4.5;
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: -100;
+  }
+}
+
+.react-flow__edge-textbg {
+  fill: hsl(var(--card));
+}
+
+.react-flow__edge-text {
+  fill: hsl(var(--foreground));
+  font-size: 11px;
+  font-weight: 500;
 }
 
 .react-flow__controls {

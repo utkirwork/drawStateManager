@@ -17,6 +17,7 @@ import "reactflow/dist/style.css";
 import StateNode, { StateNodeData } from "./StateNode";
 import { WorkflowToolbar } from "./WorkflowToolbar";
 import { InspectorPanel } from "./InspectorPanel";
+import { ConnectionLegend } from "./ConnectionLegend";
 import { toast } from "sonner";
 
 const nodeTypes = {
@@ -44,21 +45,37 @@ export const WorkflowCanvas = () => {
 
   const onConnect = useCallback(
     (params: Connection) => {
+      // Get source and target nodes to determine direction
+      const sourceNode = nodes.find((n) => n.id === params.source);
+      const targetNode = nodes.find((n) => n.id === params.target);
+      
+      // Check if this is a backward flow (target is to the left of source)
+      const isBackwardFlow = sourceNode && targetNode && 
+        targetNode.position.x < sourceNode.position.x;
+      
+      const edgeColor = isBackwardFlow 
+        ? "hsl(var(--loop))" 
+        : "hsl(var(--accent))";
+      
       const newEdge = {
         ...params,
         type: "smoothstep",
         animated: true,
-        style: { stroke: "hsl(var(--accent))", strokeWidth: 2 },
+        style: { 
+          stroke: edgeColor, 
+          strokeWidth: isBackwardFlow ? 3 : 2.5 
+        },
         markerEnd: {
           type: MarkerType.ArrowClosed,
-          color: "hsl(var(--accent))",
+          color: edgeColor,
         },
-        label: "Transition",
+        label: isBackwardFlow ? "Loop/Return" : "Transition",
+        className: isBackwardFlow ? "backward-flow" : "",
       };
       setEdges((eds) => addEdge(newEdge, eds));
-      toast.success("Transition created");
+      toast.success(isBackwardFlow ? "Loop connection created" : "Transition created");
     },
-    [setEdges]
+    [setEdges, nodes]
   );
 
   const onNodeClick = useCallback((_: any, node: Node<StateNodeData>) => {
@@ -208,6 +225,7 @@ export const WorkflowCanvas = () => {
           <h1 className="text-2xl font-bold text-foreground">StateManagerDraw</h1>
           <p className="text-sm text-muted-foreground">Visual Workflow Builder</p>
         </div>
+        <ConnectionLegend />
       </div>
 
       <div className="flex-1 flex">
