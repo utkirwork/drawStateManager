@@ -43,7 +43,7 @@ const StateNode = ({ data, selected }: NodeProps<StateNodeData>) => {
     >
       <Handle
         type="target"
-        position={Position.Top}
+        position={Position.Left}
         className="!bg-accent !border-2 !border-accent-foreground/20 !w-3 !h-3"
       />
       
@@ -63,7 +63,7 @@ const StateNode = ({ data, selected }: NodeProps<StateNodeData>) => {
 
       <Handle
         type="source"
-        position={Position.Bottom}
+        position={Position.Right}
         className="!bg-accent !border-2 !border-accent-foreground/20 !w-3 !h-3"
       />
     </div>
